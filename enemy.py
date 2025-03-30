@@ -7,4 +7,4 @@ class Enemy:
     def play(self):
         return random.choice(self.moves)
     
-en = Enemy()
+strategy = Enemy()

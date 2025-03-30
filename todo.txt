@@ -1,0 +1,9 @@
+probability strat change:
+	-whilst collecting info about enemy it tweaks the probabilitychange's value
+	-instead of a general change value every play has it's own ?
+
+new strat:
+	-recognition:
+		-try to recognize a pattern based on the enemy's previous plays
+		-the strategy it self is done, still there is room for improvement
+			-in decide to play the play pick isn't really advanced: just iterate through patterns and if the previous play was found play the patterns next element

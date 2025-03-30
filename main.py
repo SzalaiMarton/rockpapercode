@@ -1,9 +1,6 @@
 import enemy
 import player
 
-gameLength: int = 100
-playLength: int = 2000
-
 
 def propCalculator(playerWin, enemyWin) -> list:
     if abs(playerWin - enemyWin) < ((playerWin + enemyWin) * 0.001):
@@ -21,8 +18,6 @@ def propCalculator(playerWin, enemyWin) -> list:
         return [0, 0]
 
     
-
-
 def defineWinner(playerPoints, enemyPoints) -> str:
     if playerPoints < enemyPoints:
         print("[Arena] Enemy win")
@@ -55,8 +50,8 @@ def main() -> str:
 
     for i in range(gameLength):
         for j in range(playLength):
-            playerPlay = player.probability.play()
-            enemyPlay = enemy.en.play()
+            playerPlay = player.strategy.play()
+            enemyPlay = enemy.strategy.play()
             player.strategy.handle_moves(playerPlay, enemyPlay)
             playPoints = playWinner(playerPlay, enemyPlay)
             playerWins += playPoints[0]
@@ -72,8 +67,10 @@ def main() -> str:
 
 
 if __name__ == "__main__":
+    gameLength: int = 100
+    playLength: int = 2000
     p, e, tie = 0, 0, 0
-    for i in range(50):
+    for i in range(100):
         a = main()
         if a == "player":
             p += 1
