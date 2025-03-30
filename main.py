@@ -1,82 +1,84 @@
-import strategy
-import enemy as e
-import math
+import enemy
+import player
 
-player = strategy.Strategies
-enemy = e.Enemy
+gameLength: int = 100
+playLength: int = 2000
 
-gameLength = 5
-playLength = 20
 
-def propotionCalculator(playerWins:int, enemyWins:int) -> list:
-    if abs(playerWins - enemyWins) < ((playerWins + enemyWins) * 0.001):
+def propCalculator(playerWin, enemyWin) -> list:
+    if abs(playerWin - enemyWin) < ((playerWin + enemyWin) * 0.001):
         return [0, 0]
     
-    propPlayer = (playerWins / (playerWins + enemyWins)) - 0.5
-    propEnemy = (enemyWins / (playerWins + enemyWins)) - 0.5
+    try:
+        propPlayer = ((playerWin)/(playerWin + enemyWin)) - 0.5
+        propEnemy = ((enemyWin)/(playerWin + enemyWin)) - 0.5
+        normPlayer = propPlayer / 0.5
+        normEnemy = propEnemy / 0.5
 
-    normalizedPlayer = propPlayer / 0.5
-    normalizedEnemy = propEnemy / 0.5
+        return [normPlayer*100, normEnemy*100]
+    except:
+        print("division by 0")
+        return [0, 0]
 
-    totalPlayer = normalizedPlayer * 100
-    totalEnemy = normalizedEnemy * 100
-
-    return [totalPlayer, totalEnemy]
-
-
-def decideWinner(playerPoints:int, enemyPoints:int) -> str:
-    playerPoints /= gameLength
-    enemyPoints /= gameLength
-
-    if playerPoints > enemyPoints:
-        return "[Arena] Player wins"
-    elif playerPoints < enemyPoints:
-        return "[Arena] Enemy wins"
-    else:
-        return "[Arena] Tie"
-
-
-def playWinner(playerPlay:str, enemyPlay:str) -> list: # [0]-own, [1]-enemy
-    if playerPlay == enemyPlay:
-        print("     [Play] Tie")
-        return [0,0]
-    elif playerPlay == "rock" and enemyPlay == "paper":
-        print("     [Play] Enemy win")
-        return [0,1]
-    elif playerPlay == "paper" and enemyPlay == "scissors":
-        print("     [Play] Enemy win")
-        return [0,1]
-    elif playerPlay == "scissors" and enemyPlay == "rock":
-        print("     [Play] Enemy win")
-        return [0,1]
-    else:
-        print("     [Play] Player win")
-        return [1,0]
     
 
-def main() -> None:
+
+def defineWinner(playerPoints, enemyPoints) -> str:
+    if playerPoints < enemyPoints:
+        print("[Arena] Enemy win")
+        return "enemy"
+    elif playerPoints > enemyPoints:
+        print("[Arena] Player win")
+        return "player"
+    elif playerPoints == enemyPoints:
+        print("[Arena] Tie")
+        return "tie"
+    
+
+def playWinner(playerPlay:str, enemyPlay:str) -> list: # [0] - player, [1] - enemy
+    if playerPlay == enemyPlay:
+        return [0, 0]
+    elif playerPlay == "rock" and enemyPlay == "paper":
+        return [0, 1]
+    elif playerPlay == "paper" and enemyPlay == "scissors":
+        return [0, 1]
+    elif playerPlay == "scissors" and enemyPlay == "rock":
+        return [0, 1]
+    else:
+        return [1, 0]
+
+
+def main() -> str:
     playerWins, enemyWins = 0, 0
     playerPoints, enemyPoints = 0, 0
-    playerPlay, enemyPlay = "", ""
-    wins = []
+    playerPlay , enemyPlay = "", ""
+
     for i in range(gameLength):
         for j in range(playLength):
-            playerPlay = player.play(player)
-            enemyPlay = enemy.play(enemy)
+            playerPlay = player.probability.play()
+            enemyPlay = enemy.en.play()
+            player.strategy.handle_moves(playerPlay, enemyPlay)
+            playPoints = playWinner(playerPlay, enemyPlay)
+            playerWins += playPoints[0]
+            enemyWins += playPoints[1]
+        
+        gameWins = propCalculator(playerWins, enemyWins)
+        playerPoints = gameWins[0]
+        enemyPoints = gameWins[1]
+        playerWins = 0
+        enemyWins = 0
 
-            player.handle_moves(playerPlay, enemyPlay)
-            
-            wins = playWinner(playerPlay, enemyPlay)
-            playerWins += wins[0]
-            enemyWins += wins[1]
-            print("")
+    return defineWinner(playerPoints, enemyPoints)
 
-        props = propotionCalculator(playerWins, enemyWins)
-        playerPoints += props[0]
-        enemyPoints += props[1]
-        playerWins, enemyWins = 0, 0
-    
-    print(decideWinner(playerPoints,enemyPoints))
 
 if __name__ == "__main__":
-    main()
+    p, e, tie = 0, 0, 0
+    for i in range(50):
+        a = main()
+        if a == "player":
+            p += 1
+        elif a == "enemy":
+            e += 1
+        elif a == "tie":
+            tie += 1
+    print(f"player: {p}, enemy: {e}, tie: {tie}")

@@ -1,6 +1,10 @@
 import random
 
 class Enemy:
-    moves = ["rock", "paper", "scissors"]
-    def play(self) -> str:
+    def __init__(self):
+        self.moves = ["rock", "paper", "scissors"]
+
+    def play(self):
         return random.choice(self.moves)
+    
+en = Enemy()
