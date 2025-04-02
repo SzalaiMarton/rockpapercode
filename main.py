@@ -52,11 +52,13 @@ def main() -> str:
         for j in range(playLength):
             playerPlay = player.strategy.play()
             enemyPlay = enemy.strategy.play()
+            enemy.strategy.handle_moves(enemyPlay, playerPlay)
             player.strategy.handle_moves(playerPlay, enemyPlay)
             playPoints = playWinner(playerPlay, enemyPlay)
             playerWins += playPoints[0]
             enemyWins += playPoints[1]
-        
+            #print(f"{j}. player: {playerPlay}         enemy: {enemyPlay}")
+
         gameWins = propCalculator(playerWins, enemyWins)
         playerPoints = gameWins[0]
         enemyPoints = gameWins[1]
@@ -70,7 +72,7 @@ if __name__ == "__main__":
     gameLength: int = 100
     playLength: int = 2000
     p, e, tie = 0, 0, 0
-    for i in range(100):
+    for i in range(10):
         a = main()
         if a == "player":
             p += 1
