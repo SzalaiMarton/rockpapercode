@@ -40,7 +40,7 @@ class Probability:
 
     def detectCounterBot(self) -> bool:
         notCounter, counter = 0, 0
-        counterBot = 0.7    # if counter plays counts exceeds the searchDepth's 80% it is a counter bot
+        counterBot = 0.7    # if counter plays counts exceeds the searchDepth's {this values}% it is a counter bot
         for plays in self.prevRounds:
             if plays[1] == self.counters[plays[0]]:
                 counter += 1
